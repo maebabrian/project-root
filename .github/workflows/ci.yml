@@ -1,0 +1,53 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main  # Trigger pipeline on pushes to the main branch
+  pull_request:
+    branches:
+      - main  # Trigger pipeline on pull requests to the main branch
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the repository code
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16  # Define Node.js version
+
+      # Step 3: Install backend dependencies and run tests
+      - name: Install Backend Dependencies and Run Tests
+        run: |
+          cd backend
+          npm install
+          npm test
+
+      # Step 4: Install frontend dependencies and run tests
+      - name: Install Frontend Dependencies and Run Tests
+        run: |
+          cd frontend
+          npm install
+          npm test
+
+      # Step 5: Build Docker Images
+      - name: Build Docker Images
+        run: |
+          docker-compose build
+
+  deploy:
+    needs: build-and-test  # Only run if build-and-test job succeeds
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy Application
+        run: |
+          echo "Deploying application..."
+          # Include deployment commands here

@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    environment:
+      - MONGO_URI=mongodb://db:27017/cad
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+  db:
+    image: mongo
+    container_name: cad_mongo
+    ports:
+      - "27017:27017"
